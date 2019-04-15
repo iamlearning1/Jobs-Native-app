@@ -1,6 +1,7 @@
 import React from "react";
-import { Button } from "react-native-elements";
+import { Button, Icon } from "react-native-elements";
 import { Provider } from "react-redux";
+import { Notifications } from "expo";
 
 import {
   createBottomTabNavigator,
@@ -8,6 +9,7 @@ import {
   createAppContainer
 } from "react-navigation";
 
+import registerForNotifications from "./services/push_notification";
 import Auth from "./screens/Auth";
 import Welcome from "./screens/Welcome";
 import Maps from "./screens/Map";
@@ -35,20 +37,38 @@ const StackNavigator = createStackNavigator({
   }
 });
 
-const TabNavigator = createBottomTabNavigator({
-  Map: {
-    screen: Maps
+const TabNavigator = createBottomTabNavigator(
+  {
+    Map: {
+      screen: Maps,
+      navigationOptions: {
+        title: "Map",
+        tabBarIcon: <Icon name="my-location" size={30} color="#03a9f4" />
+      }
+    },
+    Deck: {
+      screen: Deck,
+      navigationOptions: {
+        title: "Jobs",
+        tabBarIcon: <Icon name="description" size={30} color="#03a9f4" />
+      }
+    },
+    Stack: {
+      screen: StackNavigator,
+      navigationOptions: {
+        title: "Review Jobs",
+        tabBarIcon: <Icon name="favorite" size={30} color="#03a9f4" />
+      }
+    }
   },
-  Deck: {
-    screen: Deck
-  },
-  Stack: {
-    screen: StackNavigator,
-    navigationOptions: {
-      title: "Review Jobs"
+  {
+    defaultNavigationOptions: {
+      tabBarOptions: {
+        labelStyle: { fontSize: 14 }
+      }
     }
   }
-});
+);
 
 const MainNavigator = createBottomTabNavigator(
   {
@@ -72,6 +92,14 @@ const MainNavigator = createBottomTabNavigator(
 const Navigator = createAppContainer(MainNavigator);
 
 export default class App extends React.Component {
+  componentDidMount() {
+    registerForNotifications();
+    Notifications.addListener(notification => {
+      if (notification.origin === "received" && notification.data.text) {
+        alert(notification.data.text);
+      }
+    });
+  }
   render() {
     return (
       <Provider store={store}>
