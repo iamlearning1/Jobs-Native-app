@@ -50,17 +50,24 @@ const TabNavigator = createBottomTabNavigator({
   }
 });
 
-const MainNavigator = createBottomTabNavigator({
-  Welcome: {
-    screen: Welcome
+const MainNavigator = createBottomTabNavigator(
+  {
+    Welcome: {
+      screen: Welcome
+    },
+    Auth: {
+      screen: Auth
+    },
+    Main: {
+      screen: TabNavigator
+    }
   },
-  Auth: {
-    screen: Auth
-  },
-  Main: {
-    screen: TabNavigator
+  {
+    defaultNavigationOptions: {
+      tabBarVisible: false
+    }
   }
-});
+);
 
 const Navigator = createAppContainer(MainNavigator);
 

@@ -5,8 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Dimensions,
-  Animated,
-  TouchableOpacity
+  Animated
 } from "react-native";
 import { Button } from "react-native-elements";
 
@@ -20,7 +19,7 @@ export default class Slides extends Component {
   buttonAnimation = () => {
     Animated.timing(this.state.position, {
       toValue: 2,
-      duration: 5000,
+      duration: 2000,
       iterations: -1,
       useNativeDriver: true
     }).start();
@@ -30,7 +29,7 @@ export default class Slides extends Component {
     const { position } = this.state;
     const scale = position.interpolate({
       inputRange: [0, 1, 2],
-      outputRange: [1, 1.5, 1]
+      outputRange: [1, 1.2, 1]
     });
     return {
       transform: [{ scale }]
@@ -44,14 +43,11 @@ export default class Slides extends Component {
           key={slide.title}
           style={[styles.slideStyle, { backgroundColor: slide.color }]}
         >
-          {}
+          {this.buttonAnimation()}
           <Text style={styles.slideText}>{slide.title}</Text>
           {index == this.props.data.length - 1 ? (
             <Animated.View style={this.getAnimation()}>
-              {/* <TouchableOpacity onPress={this.buttonAnimation}>
-                <Text>Hello</Text>
-              </TouchableOpacity> */}
-              <Button title="Onwards!" onPress={this.buttonAnimation()} />
+              <Button title="Onwards!" onPress={this.props.onComplete} />
             </Animated.View>
           ) : null}
         </View>
